@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.ittmdb.R;
 import com.ittmdb.controller.dialogs.MovieInfoDialog;
+import com.ittmdb.controller.dialogs.MovieNotesDialog;
 import com.ittmdb.model.IMovieDao;
 import com.ittmdb.model.Movie;
 import com.ittmdb.model.MovieDataSource;
@@ -122,6 +123,7 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
             checkboxFavsStates.set(position, true);
         }
 
+//        setting the colors
         holder.chbWatched.setChecked(checkboxWatchedStates.get(position));
         if (holder.chbWatched.isChecked()) {
             holder.movieHolder.setBackgroundResource(R.color.colorWatched);
@@ -142,11 +144,20 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
         if (holder.chbFav.isChecked() && holder.chbWatched.isChecked())
             holder.movieHolder.setBackgroundResource(R.color.colorFavWatched);
 
+//        setting functionality
         if (sourceType.equals("watched")){
             holder.movieHolder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     new MovieInfoDialog(activity,movie.getTitle(),movie.getReleased()).show();
+                }
+            });
+        }
+        if (sourceType.equals("fav")){
+            holder.movieHolder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new MovieNotesDialog(activity,movie.getTitle()).show();
                 }
             });
         }
@@ -157,7 +168,6 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
 
         return movies.size();
     }
-
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
@@ -188,6 +198,8 @@ public class MovieRecyclerAdapter extends RecyclerView.Adapter<MovieRecyclerAdap
             txtMovieRated = (TextView) v.findViewById(R.id.movie_rated);
             chbFav = (CheckBox) v.findViewById(R.id.chb_fav);
             chbWatched = (CheckBox) v.findViewById(R.id.chb_watched);
+            if (sourceType.equals("fav"))
+                chbWatched.setVisibility(View.GONE);
         }
 
     }
